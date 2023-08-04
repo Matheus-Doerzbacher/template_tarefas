@@ -5,6 +5,7 @@ import { ShoppingCart, Star,  } from "lucide-react";
 import useListaCompras from "@/data/hooks/useListaCompras";
 import Tarefa from "@/components/Tarefas/Tarefa";
 import useTarefas from "@/data/hooks/useTarefas";
+import useAppData from "@/data/hooks/useAppData";
 
 export default function Favoritos() {
     const { adicionarTarefa, concluirTarefa, deletarTarefa, tarefas, favoritar } =
