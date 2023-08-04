@@ -1,8 +1,8 @@
 "use client";
 import { SunIcon } from "lucide-react";
-import BarraAdicionar from "../components/BarraAdicionar";
-import HeaderMain from "../components/HeaderMain";
-import Tarefa from "../components/Tarefas/Tarefa";
+import BarraAdicionar from "../../components/BarraAdicionar";
+import HeaderMain from "../../components/HeaderMain";
+import Tarefa from "../../components/Tarefas/Tarefa";
 import useTarefas from "@/data/hooks/useTarefas";
 
 export default function Home() {

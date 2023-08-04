@@ -1,22 +1,22 @@
 "use client";
 import BarraAdicionar from "@/components/BarraAdicionar";
-import HeaderMain from "../../components/HeaderMain";
-import { ShoppingCart } from "lucide-react";
-import useListaCompras from "@/data/hooks/useListaCompras";
+import HeaderMain from "@/components/HeaderMain";
 import Tarefa from "@/components/Tarefas/Tarefa";
+import { HomeIcon } from "lucide-react";
+import useTarefas from "../../../data/hooks/useTarefas";
 
-export default function Compras() {
-  const { lista, adicionarTarefa, concluirTarefa, deletarTarefa } =
-    useListaCompras();
+export default function Tarefas() {
+  const { adicionarTarefa, concluirTarefa, deletarTarefa, tarefas, favoritar } =
+    useTarefas();
 
   return (
     <>
-      <HeaderMain nome="Compras">
-        <ShoppingCart className="text-star-color"/>
+      <HeaderMain nome="Tarefas">
+        <HomeIcon className="text-home-color"/>
       </HeaderMain>
-      <BarraAdicionar addTarefa={adicionarTarefa} compras />
+      <BarraAdicionar addTarefa={adicionarTarefa} />
 
-      {lista
+      {tarefas
         .filter((item) => item.concluido === false)
         .map((item) => (
           <Tarefa
@@ -26,17 +26,16 @@ export default function Compras() {
             data={item.data}
             isfavorito={item.favorito}
             favoritarTarefas={() => favoritar(item.id)}
-            compras
           />
         ))}
 
-      {lista.filter((item) => item.concluido === true).length > 0 ? (
-        <h1 className="mt-5">Tá no carrinho</h1>
+      {tarefas.filter((item) => item.concluido === true).length > 0 ? (
+        <h1 className="mt-5">Concluidas</h1>
       ) : (
         ""
       )}
 
-      {lista
+      {tarefas
         .filter((item) => item.concluido === true)
         .map((item) => (
           <Tarefa

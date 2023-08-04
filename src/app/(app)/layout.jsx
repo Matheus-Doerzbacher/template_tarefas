@@ -1,6 +1,5 @@
-import "./globals.css";
-import Sidebar from "../components/Sidebar/Sidebar";
-import Header from "../components/Header";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import Header from "@/components/Header";
 import { ToastContainer } from "react-toastify";
 import { AppProvider } from "@/data/context/AppContext";
 
@@ -11,28 +10,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <AppProvider>
         <body className=" flex  flex-col w-screen h-screen bg-[#11100F] text-zinc-200">
+          <Header />
           <main className="flex flex-1 w-full">
+            <Sidebar />
             <div className="flex flex-1 flex-col m-3 sm:m-7 overflow-hidden">
               {children}
             </div>
           </main>
-          <ToastContainer
-            position="top-right"
-            autoClose={1000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
         </body>
-      </AppProvider>
-    </html>
   );
 }
