@@ -2,7 +2,7 @@
 import BarraAdicionar from "@/components/BarraAdicionar";
 import HeaderMain from "@/components/HeaderMain";
 import Tarefa from "@/components/Tarefas/Tarefa";
-import { HomeIcon } from "lucide-react";
+import { FileText, HomeIcon } from "lucide-react";
 import useTarefas from "../../../data/hooks/useTarefas";
 
 export default function Tarefas() {
@@ -12,7 +12,7 @@ export default function Tarefas() {
   return (
     <>
       <HeaderMain nome="Tarefas">
-        <HomeIcon className="text-home-color"/>
+        <FileText className="text-home-color"/>
       </HeaderMain>
       <BarraAdicionar addTarefa={adicionarTarefa} />
 

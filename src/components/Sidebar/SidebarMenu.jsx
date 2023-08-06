@@ -7,8 +7,10 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import useAppData from "@/data/hooks/useAppData";
 
 export default function SidebarMenu({ nome, href, icon, esconderMenu }) {
+  const {tema} = useAppData()
   const url = usePathname();
   return (
     <>
@@ -16,11 +18,9 @@ export default function SidebarMenu({ nome, href, icon, esconderMenu }) {
         key={nome}
         href={href}
         className={`flex items-center h-11 
-                ${
-                  url === href
-                    ? "bg-[#3b3a39] hover:bg-[#3b3a39]"
-                    : "hover:bg-[#323130] "
-                }
+                ${url === href
+                    ? (tema === 'dark' ? "bg-[#3b3a39] hover:bg-[#3b3a39]" : "bg-zinc-400 hover:bg-zinc-400")
+                    : "hover:bg-[#323130] "}
             `}
       >
         <div
@@ -32,7 +32,7 @@ export default function SidebarMenu({ nome, href, icon, esconderMenu }) {
           {esconderMenu ? (
             ""
           ) : (
-            <span className="text-sm text-white hidden sm:flex">{nome}</span>
+            <span className={`text-sm ${tema === 'dark' ? "text-white" : "text-black"} hidden sm:flex`}>{nome}</span>
           )}
         </div>
       </Link>

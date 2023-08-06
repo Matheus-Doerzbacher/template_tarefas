@@ -7,11 +7,15 @@ import {
   Home as HomeIcon,
   Menu,
   Star,
+  FileText,
 } from "lucide-react";
 import SidebarMenu from "./SidebarMenu";
 import { useEffect, useState } from "react";
+import useAppData from "@/data/hooks/useAppData";
 
 export default function Sidebar() {
+
+  const {tema} = useAppData()
   const [selecionado, setSelecionado] = useState("/");
   const [esconderMenu, setEsconderMenu] = useState(false);
 
@@ -25,12 +29,13 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`flex flex-col sm:py-7 bg-[#252423] h-full ${
-        esconderMenu ? "w-18" : "sm:w-48 lg:w-72"
-      }`}
+      className={`flex flex-col sm:py-7  h-full 
+        ${esconderMenu ? "w-18" : "sm:w-48 lg:w-72"}
+        ${tema === 'dark' ? "bg-[#252423]" : 'bg-zinc-200'}
+      `}
     >
       <button onClick={hiddenMenu} className="ml-6 mb-5 hidden sm:flex">
-        <Menu size={20} />
+        <Menu size={20} className={`${tema === 'dark' ? '' : "text-black"}`}/>
       </button>
       <SidebarMenu
         nome="Meu Dia"
@@ -43,7 +48,7 @@ export default function Sidebar() {
         nome="Tarefas"
         href="/tarefas"
         esconderMenu={esconderMenu}
-        icon={<HomeIcon size={20} className="text-home-color" />}
+        icon={<FileText size={20} className="text-home-color" />}
       />
 
       <SidebarMenu
