@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Circle, Plus } from "lucide-react";
+import useAppData from "@/data/hooks/useAppData";
 
 export default function BarraAdicionar({ addTarefa, compras }) {
+  const {tema} = useAppData()
   const [inFocus, setInFocus] = useState("");
   const [tarefa, setTarefa] = useState("");
 
@@ -11,10 +13,12 @@ export default function BarraAdicionar({ addTarefa, compras }) {
   }
 
   return (
-    <div className="w-full h-12  flex items-center rounded bg-[#252423] mb-3">
+    <div className={`w-full h-12  flex items-center rounded mb-3
+      ${tema === 'dark' ? 'bg-[#252423]' : 'bg-zinc-300'}
+    `}>
       <label id="barra">
         <button
-          className="px-5 py-3 text-[#55a4f0]"
+          className={`px-5 py-3 ${tema === 'dark' ? 'text-[#55a4f0]' : 'text-[#004e97]'}`}
           onClick={() => {
             addTarefas(tarefa), setTarefa("");
           }}
@@ -22,7 +26,7 @@ export default function BarraAdicionar({ addTarefa, compras }) {
           {!inFocus ? (
             <Plus size={23} className="" />
           ) : (
-            <Circle size={23} className="hover:text-[#8ec7ff]" />
+            <Circle size={23} className={`${tema === 'dark' ? "hover:text-[#8ec7ff]" : "hover:text-[#0079f1]"}`} />
           )}
         </button>
       </label>
@@ -41,7 +45,11 @@ export default function BarraAdicionar({ addTarefa, compras }) {
         onChange={(i) => {
           setInFocus(i.target.value), setTarefa(i.target.value);
         }}
-        className="w-full h-full pr-2 bg-transparent outline-none placeholder:text-[#55a4f0] focus:placeholder:text-zinc-100"
+        className={`w-full h-full pr-2 bg-transparent outline-none 
+          ${tema === 'dark' 
+            ? "placeholder:text-[#55a4f0] focus:placeholder:text-zinc-100" 
+            : "placeholder:text-[#004e97] focus:placeholder:text-zinc-800"}
+        `}
         autoComplete="off"
       />
     </div>

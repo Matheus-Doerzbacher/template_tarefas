@@ -30,7 +30,7 @@ export default function DataAtual() {
   const now = new Date();
 
   return (
-    <span className={`text-xs font-light
+    <span className={`text-xs
       ${tema === 'dark' ? 'text-zinc-300' : 'text-zinc-800'}
     `}>{`${
       dayName[now.getDay()]

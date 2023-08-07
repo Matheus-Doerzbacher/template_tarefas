@@ -19,8 +19,8 @@ export default function SidebarMenu({ nome, href, icon, esconderMenu }) {
         href={href}
         className={`flex items-center h-11 
                 ${url === href
-                    ? (tema === 'dark' ? "bg-[#3b3a39] hover:bg-[#3b3a39]" : "bg-zinc-300 hover:bg-[#cecece]")
-                    : (tema === 'dark' ? "hover:bg-[#323130] " : "hover:bg-[#cecece]")}
+                    ? (tema === 'dark' ? "bg-[#3b3a39] hover:bg-[#3b3a39]" : "bg-zinc-300 hover:bg-[#b3b3b3]")
+                    : (tema === 'dark' ? "hover:bg-[#323130] " : "hover:bg-[#b3b3b3]")}
             `}
       >
         <div

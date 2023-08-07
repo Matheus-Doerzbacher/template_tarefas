@@ -7,8 +7,8 @@ export default function Header() {
   const { tema, alternarTema } = useAppData();
   return (
     <header
-      className={`flex px-7 py-1.5 h-12 w-full  border-b justify-between border-[#484644]
-                ${tema === "dark" ? "bg-[#1b1a19]" : "bg-zinc-100"}
+      className={`flex px-7 py-1.5 h-12 w-full  justify-between shadow-xl
+                ${tema === "dark" ? "bg-[#1b1a19] shadow-zinc-800" : "bg-zinc-50 border-zinc-300"}
     `}
     >
       <div className="flex flex-col items-center">
