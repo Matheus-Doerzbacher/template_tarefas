@@ -11,10 +11,12 @@ export default function Favoritos() {
     const { adicionarTarefa, concluirTarefa, deletarTarefa, tarefas, favoritar } =
     useTarefas();
 
+    const {tema} = useAppData()
+
   return (
     <>
       <HeaderMain nome="Favoritos">
-        <Star className="text-yellow-500"/>
+        <Star className={`${tema === 'dark' ? "text-yellow-500" : "text-[#ceb900]"}`}/>
       </HeaderMain>
 
       {tarefas

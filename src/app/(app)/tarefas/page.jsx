@@ -4,16 +4,19 @@ import HeaderMain from "@/components/HeaderMain";
 import Tarefa from "@/components/Tarefas/Tarefa";
 import { FileText, HomeIcon } from "lucide-react";
 import useTarefas from "../../../data/hooks/useTarefas";
+import useAppData from "@/data/hooks/useAppData";
 
 export default function Tarefas() {
   const { adicionarTarefa, concluirTarefa, deletarTarefa, tarefas, favoritar } =
     useTarefas();
 
+    const {tema} = useAppData()
+
   return (
     <>
       <HeaderMain nome="Tarefas">
-        <FileText className="text-home-color"/>
-      </HeaderMain>
+        <FileText className={`${tema === 'dark' ? "text-home-color" : "text-[#507464]"}`}/>
+      </HeaderMain >
       <BarraAdicionar addTarefa={adicionarTarefa} />
 
       {tarefas

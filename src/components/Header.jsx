@@ -1,6 +1,7 @@
 "use client";
 import useAppData from "@/data/hooks/useAppData";
 import { Search } from "lucide-react";
+import BotaoAlternarTema from '@/components/BotaoAlternarTema'
 
 export default function Header() {
   const { tema, alternarTema } = useAppData();
@@ -27,14 +28,7 @@ export default function Header() {
         </span>
       </div>
       <div className="hidden sm:flex w-[9rem]"></div>
-      <div>
-        <button 
-          onClick={alternarTema}
-          className={`${tema === "dark" ? "text-zinc-200" : "text-zinc-950"}`}
-        >
-          {tema === "dark" ? "dark" : "light"}
-        </button>
-      </div>
+      <BotaoAlternarTema tema={tema} alternarTema={alternarTema} />
     </header>
   );
 }

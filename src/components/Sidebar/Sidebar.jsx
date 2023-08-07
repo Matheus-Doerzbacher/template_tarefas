@@ -41,28 +41,28 @@ export default function Sidebar() {
         nome="Meu Dia"
         href="/"
         esconderMenu={esconderMenu}
-        icon={<SunMedium size={20} className="text-zinc-400" />}
+        icon={<SunMedium size={20} className={`${tema === 'dark' ? "text-zinc-400" : "text-zinc-700"}`} />}
       />
 
       <SidebarMenu
         nome="Tarefas"
         href="/tarefas"
         esconderMenu={esconderMenu}
-        icon={<FileText size={20} className="text-home-color" />}
+        icon={<FileText size={20} className={`${tema === 'dark' ? "text-home-color" : "text-[#507464]"}`} />}
       />
 
       <SidebarMenu
         nome="Favoritos"
         href="/favoritos"
         esconderMenu={esconderMenu}
-        icon={<Star size={20} className="text-yellow-500" />}
+        icon={<Star size={20} className={`${tema === 'dark' ? "text-yellow-500" : "text-[#ceb900]"}`} />}
       />
       
       <SidebarMenu
         nome="Compras"
         href="/compras"
         esconderMenu={esconderMenu}
-        icon={<ShoppingCart size={20} className="text-star-color" />}
+        icon={<ShoppingCart size={20} className={`${tema === 'dark' ? "text-star-color" : "text-[#cc6f81]"}`} />}
       />
 
     </aside>

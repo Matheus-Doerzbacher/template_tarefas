@@ -1,4 +1,9 @@
+import useAppData from "@/data/hooks/useAppData";
+
 export default function DataAtual() {
+
+  const {tema} = useAppData()
+
   const dayName = new Array(
     "domingo",
     "segunda-feira",
@@ -25,7 +30,9 @@ export default function DataAtual() {
   const now = new Date();
 
   return (
-    <span className=" text-xs text-zinc-300 font-light">{`${
+    <span className={`text-xs font-light
+      ${tema === 'dark' ? 'text-zinc-300' : 'text-zinc-800'}
+    `}>{`${
       dayName[now.getDay()]
     }, ${now.getDate()} de ${monName[now.getMonth()]}`}</span>
   );

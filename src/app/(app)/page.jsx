@@ -4,17 +4,19 @@ import BarraAdicionar from "../../components/BarraAdicionar";
 import HeaderMain from "../../components/HeaderMain";
 import Tarefa from "../../components/Tarefas/Tarefa";
 import useTarefas from "@/data/hooks/useTarefas";
+import useAppData from "@/data/hooks/useAppData";
 
 export default function Home() {
   const { adicionarTarefa, concluirTarefa, deletarTarefa, tarefas, favoritar } =
     useTarefas();
+  const {tema} = useAppData()
 
   const dataAtual = new Date();
 
   return (
     <>
       <HeaderMain nome="Meu Dia">
-        <SunIcon  className="text-zinc-400"/>
+        <SunIcon  className={`${tema === 'dark' ? "text-zinc-400" : "text-zinc-700"}`}/>
       </HeaderMain>
 
       <BarraAdicionar addTarefa={adicionarTarefa} />

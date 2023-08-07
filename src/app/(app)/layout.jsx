@@ -1,7 +1,9 @@
+"use client"
 import Sidebar from "@/components/Sidebar/Sidebar";
 import Header from "@/components/Header";
 import { ToastContainer } from "react-toastify";
 import { AppProvider } from "@/data/context/AppContext";
+import useAppData from "@/data/hooks/useAppData";
 
 export const metadata = {
   title: "Minhas Tarefas",
@@ -9,8 +11,13 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
+  const {tema} = useAppData()
+
   return (
-        <body className=" flex  flex-col w-screen h-screen bg-[#11100F] text-zinc-200">
+        <body className={`flex  flex-col w-screen h-screen 
+          ${tema === 'dark' ? "bg-[#11100F] text-zinc-200" : "bg-zinc-100 text-[#11100F]"}
+        `}>
           <Header />
           <main className="flex flex-1 w-full">
             <Sidebar />
