@@ -1,32 +1,54 @@
-"use client"
-import { createContext, useContext, useState } from "react"
+"use client";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
-type Tema = 'dark' | ''
+type Tema = "dark" | "";
 
-interface AppContextProps   {
-    tema?: Tema
-    alternarTema?: () => void
+interface AppContextProps {
+  tema?: Tema;
+  alternarTema?: () => void;
 }
 
-const AppContext = createContext<AppContextProps>({})
+const AppContext = createContext<AppContextProps>({});
 
-export function AppProvider(props: any){
-    const [tema, setTema] = useState<Tema>('dark')
+export function AppProvider(props: any) {
+  const [tema, setTema] = useState<Tema>("");
 
-    function alternarTema() {
-        setTema(tema === '' ? 'dark': '')
+  const obterTema = useCallback(() => {
+    const tema = localStorage.getItem("@temaTarefas");
+
+    if (tema) {
+      setTema(JSON.parse(tema));
     }
+  }, []);
 
-    return (
-        <AppContext.Provider value={{
-            tema,
-            alternarTema
-        }}>
-            {props.children}
-        </AppContext.Provider>
-    )
+  useEffect(() => {
+    obterTema();
+  }, [obterTema]);
+
+  useEffect(() => {
+    localStorage.setItem("@temaTarefas", JSON.stringify(tema));
+  }, [tema]);
+
+  function alternarTema() {
+    setTema(tema === "" ? "dark" : "");
+  }
+
+  return (
+    <AppContext.Provider
+      value={{
+        tema,
+        alternarTema,
+      }}
+    >
+      {props.children}
+    </AppContext.Provider>
+  );
 }
 
-export default AppContext
-
-
+export default AppContext;
