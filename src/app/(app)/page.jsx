@@ -31,6 +31,7 @@ export default function Home() {
             key={item.id}
             nome={item.nome}
             concluirATarefa={() => concluirTarefa(item.id)}
+            deletarTarefas={() => deletarTarefa(item.id)}
             data={item.data}
             isfavorito={item.favorito}
             favoritarTarefas={() => favoritar(item.id)}

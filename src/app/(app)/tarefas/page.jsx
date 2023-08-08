@@ -26,6 +26,7 @@ export default function Tarefas() {
             key={item.id}
             nome={item.nome}
             concluirATarefa={() => concluirTarefa(item.id)}
+            deletarTarefas={() => deletarTarefa(item.id)}
             data={item.data}
             isfavorito={item.favorito}
             favoritarTarefas={() => favoritar(item.id)}
