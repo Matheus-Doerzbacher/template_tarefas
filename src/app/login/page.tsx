@@ -4,6 +4,8 @@
 import { useState } from "react";
 import api from "@/service/api";
 import AuthInput from "@/components/AuthInput";
+import Cookie from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function Autentificacao() {
     const [modo, setModo] = useState<"login" | "cadastro">("login");
@@ -12,6 +14,7 @@ export default function Autentificacao() {
     const [nome, setNome] = useState("");
     const [senha, setSenha] = useState("");
 
+    const router = useRouter()
 
     const fazerLogin = async () => {
         if (modo === "login") {
@@ -21,16 +24,15 @@ export default function Autentificacao() {
                     senha,
                 })
                 .then((res) => {
-                    console.log(res.data.token);
-                    setEmail('')
-                    setSenha('')
-                    window.location.href = "http://localhost:3000/";
+                    setEmail("");
+                    setSenha("");
+                    Cookie.set('auth_token', res.data.token)
+                    router.push('/')
                 })
                 .catch((err) => {
                     console.log(err.response.data);
-                    setErro("Usuario ou senha inválidos")
+                    setErro(err.response.data);
                 });
-            
         } else {
             await api
                 .post("/usuario", {
@@ -40,42 +42,17 @@ export default function Autentificacao() {
                 })
                 .then((res) => {
                     console.log(res.data);
-                    setEmail('')
-                    setSenha('')
-                    setNome('')
+                    setEmail("");
+                    setSenha("");
+                    setNome("");
                 })
                 .catch((err) => {
                     console.error(err.response.data);
                 });
-            
         }
     };
 
     return (
-        // <div className="flex flex-col items-center justify-center text-zinc-200 gap-4 w-screen">
-        //     <h1 className="font-bold">Página de Login</h1>
-        //     <input
-        //         type="text"
-        //         value={email}
-        //         placeholder="Email..."
-        //         onChange={e => setEmail(e.target.value)}
-        //         className="bg-zinc-900 border border-zinc-800 text-zinc-300 p-2 w-1/2"
-        //     />
-        //     <input
-        //         type="password"
-        //         value={senha}
-        //         placeholder="Senha..."
-        //         onChange={e => setSenha(e.target.value)}
-        //         className="bg-zinc-900 border border-zinc-800 text-zinc-300 p-2 w-1/2"
-        //         onKeyUp={(e) => {
-        //             if (e.code === "Enter" || e.code === "NumpadEnter") {fazerLogin()}
-        //           }}
-        //     />
-        //     <button className="border p-2" onClick={fazerLogin}>
-        //         Fazer login
-        //     </button>
-        //     <h1>{`${res}`}</h1>
-        // </div>
         <div className="flex  h-screen justify-center items-center ">
             <div className=" hidden md:block md:w-1/2 lg:w-2/3">
                 <img
@@ -105,7 +82,7 @@ export default function Autentificacao() {
                     false
                 )}
 
-                {modo !== 'login' ?
+                {modo !== "login" &&
                     <AuthInput
                         label="Nome"
                         tipo="text"
@@ -114,7 +91,7 @@ export default function Autentificacao() {
                         obrigatorio
                         fazerLogin={fazerLogin}
                     />
-                : ""}
+                }
 
                 <AuthInput
                     label="Email"
@@ -174,8 +151,6 @@ export default function Autentificacao() {
                         </a>
                     </p>
                 )}
-
-                
             </div>
         </div>
     );
