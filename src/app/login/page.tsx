@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "@/service/api";
 import AuthInput from "@/components/AuthInput";
 import useAuthData from "@/data/hooks/useAuthData";
@@ -14,14 +14,17 @@ export default function Autentificacao() {
     const [senha, setSenha] = useState("");
 
     const {singIn} = useAuthData()
-    
 
+    useEffect(() => {
+        setErro('')
+    }, [modo])
+    
     const fazerLogin = async () => {
         if (modo === "login") {
             try{
                 await singIn({email, senha})
             } catch(err){
-                setErro(err)
+                setErro(err.response.data)
             }
 
             setEmail("");
