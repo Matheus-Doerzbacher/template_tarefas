@@ -30,7 +30,7 @@ export default function Header() {
         </span>
       </div>
       <div>
-        <h1 className="text-zinc-50">{user}</h1>
+        <h1 className={`${tema === "dark" ? "text-zinc-200" : "text-zinc-950"}`}>{user}</h1>
       </div>
       <div className="hidden sm:flex w-[9rem]"></div>
       <BotaoAlternarTema tema={tema} alternarTema={alternarTema} />

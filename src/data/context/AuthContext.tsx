@@ -25,15 +25,15 @@ export function AuthProvider({ children }: any) {
     const router = useRouter();
 
     async function buscarUsuario(token){
-        const {user}: any = await api.post("/usuario/token", {token});
-        console.log(user)
+        const nome: any = await api.post("/usuario/token", {token});
+        setUser(nome.data)
     }
 
     useEffect(() => {
         const {'auth_token': token} = parseCookies()
 
         if(token){
-            buscarUsuario(token) 
+            buscarUsuario(token).then
         }
     }, [])
 

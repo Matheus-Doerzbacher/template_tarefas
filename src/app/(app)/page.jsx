@@ -11,9 +11,11 @@ export default function Home() {
     useTarefas();
   const {tema} = useAppData()
 
-  const dataAtual = new Date();
+  const dia = new Date().getDate()
+  const mes = new Date().getMonth() + 1
+  const ano = new Date().getFullYear()
 
-  
+  const dataAtual = `${dia}/${mes}/${ano}`
 
   return (
     <>
@@ -26,7 +28,7 @@ export default function Home() {
       {tarefas
         .filter(
           (item) =>
-            item.concluido === false && item.data === dataAtual.toDateString()
+            item.realizada === false && item.data_criacao === dataAtual
         )
         .map((item) => (
           <Tarefa
@@ -34,7 +36,7 @@ export default function Home() {
             nome={item.nome}
             concluirATarefa={() => concluirTarefa(item.id)}
             deletarTarefas={() => deletarTarefa(item.id)}
-            data={item.data}
+            data={item.data_criacao}
             isfavorito={item.favorito}
             favoritarTarefas={() => favoritar(item.id)}
           />
@@ -42,7 +44,7 @@ export default function Home() {
 
       {tarefas.filter(
         (item) =>
-          item.concluido === true && item.data === dataAtual.toDateString()
+          item.realizada === true && item.data_criacao === dataAtual
       ).length > 0 ? (
         <h1 className="mt-5">Concluidas</h1>
       ) : (
@@ -52,7 +54,7 @@ export default function Home() {
       {tarefas
         .filter(
           (item) =>
-            item.concluido === true && item.data === dataAtual.toDateString()
+            item.realizada === true && item.data_criacao === dataAtual
         )
         .map((item) => (
           <Tarefa

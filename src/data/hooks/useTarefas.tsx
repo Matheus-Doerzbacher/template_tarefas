@@ -1,82 +1,94 @@
+import api from "@/service/api";
+import { parseCookies } from "nookies";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 export default function useTarefas() {
-  const [tarefas, setTarefas] = useState<any[]>([]);
+    const [tarefas, setTarefas] = useState<any[]>([]);
 
-  const obterTarefas = useCallback(() => {
-    const tarefasStorage = localStorage.getItem("@minhastarefas");
+    async function obterTarefas() {
+        try {
+            const { auth_token: token } = parseCookies();
+            const { data }: any = await api.get("/tarefa", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-    if (tarefasStorage) {
-      setTarefas(JSON.parse(tarefasStorage));
+            const tarefas = data.resultados;
+
+            if (tarefas) {
+                setTarefas(tarefas);
+            }
+        } catch (err) {
+            console.error(err.response.data);
+        }
     }
-  }, []);
 
-  useEffect(() => {
-    obterTarefas();
-  }, [obterTarefas]);
+    useEffect(() => {
+        obterTarefas();
+    }, []);
 
-  useEffect(() => {
-    localStorage.setItem("@minhastarefas", JSON.stringify(tarefas));
-  }, [tarefas]);
+    useEffect(() => {
+        localStorage.setItem("@minhastarefas", JSON.stringify(tarefas));
+    }, [tarefas]);
 
-  function adicionarTarefa(tarefa: string) {
-    const idTarefa = Math.floor(Date.now() * Math.random()).toString(36);
+    function adicionarTarefa(tarefa: string) {
+        const idTarefa = Math.floor(Date.now() * Math.random()).toString(36);
 
-    if (tarefa) {
-      const dataAtual = new Date();
+        if (tarefa) {
+            const dataAtual = new Date();
 
-      const objetoTafefa = {
-        id: idTarefa,
-        nome: tarefa,
-        concluido: false,
-        data: dataAtual.toDateString(),
-        favorito: false,
-      };
+            const objetoTafefa = {
+                id: idTarefa,
+                nome: tarefa,
+                concluido: false,
+                data: dataAtual.toDateString(),
+                favorito: false,
+            };
 
-      setTarefas([...tarefas, objetoTafefa]);
+            setTarefas([...tarefas, objetoTafefa]);
+        }
     }
-  }
 
-  function concluirTarefa(tarefa: string) {
-    const indexTarefa = tarefas.findIndex((item) => item.id === tarefa);
+    function concluirTarefa(tarefa: string) {
+        const indexTarefa = tarefas.findIndex((item) => item.id === tarefa);
 
-    const tarefaSelecionada = tarefas[indexTarefa];
-      tarefaSelecionada.concluido = !tarefaSelecionada.concluido;
+        const tarefaSelecionada = tarefas[indexTarefa];
+        tarefaSelecionada.concluido = !tarefaSelecionada.concluido;
 
-    setTarefas(tarefas.filter((item) => item.id !== tarefa));
+        setTarefas(tarefas.filter((item) => item.id !== tarefa));
 
-    setTarefas([...tarefas]);
+        setTarefas([...tarefas]);
 
-    if (tarefaSelecionada.concluido === true) { 
-      toast.success("Tarefas concluida")
+        if (tarefaSelecionada.concluido === true) {
+            toast.success("Tarefas concluida");
+        }
     }
-  }
 
-  function deletarTarefa(tarefa: string) {
-    setTarefas(tarefas.filter((item) => item.id !== tarefa));
-    toast.error("Tarefa deleteda")
-  }
+    function deletarTarefa(tarefa: string) {
+        setTarefas(tarefas.filter((item) => item.id !== tarefa));
+        toast.error("Tarefa deleteda");
+    }
 
-  function favoritar(tarefa: string) {
-    const indexTarefa = tarefas.findIndex((item) => item.id === tarefa);
+    function favoritar(tarefa: string) {
+        const indexTarefa = tarefas.findIndex((item) => item.id === tarefa);
 
-    const tarefaSelecionada = tarefas[indexTarefa];
-    
-    
-    tarefaSelecionada.favorito = !tarefaSelecionada.favorito
+        const tarefaSelecionada = tarefas[indexTarefa];
 
-    setTarefas(tarefas.filter((item) => item.id !== tarefa));
+        tarefaSelecionada.favorito = !tarefaSelecionada.favorito;
 
-    setTarefas([...tarefas]);
-  }
+        setTarefas(tarefas.filter((item) => item.id !== tarefa));
 
-  return {
-    tarefas,
-    adicionarTarefa,
-    concluirTarefa,
-    deletarTarefa,
-    favoritar,
-  };
+        setTarefas([...tarefas]);
+    }
+
+    return {
+        tarefas,
+        adicionarTarefa,
+        concluirTarefa,
+        deletarTarefa,
+        favoritar,
+    };
 }

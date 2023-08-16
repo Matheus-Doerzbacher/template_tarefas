@@ -20,7 +20,7 @@ export default function Tarefas() {
       <BarraAdicionar addTarefa={adicionarTarefa} />
 
       {tarefas
-        .filter((item) => item.concluido === false)
+        .filter((item) => item.realizada === false)
         .map((item) => (
           <Tarefa
             key={item.id}
@@ -33,14 +33,14 @@ export default function Tarefas() {
           />
         ))}
 
-      {tarefas.filter((item) => item.concluido === true).length > 0 ? (
+      {tarefas.filter((item) => item.realizada === true).length > 0 ? (
         <h1 className="mt-5">Concluidas</h1>
       ) : (
         ""
       )}
 
       {tarefas
-        .filter((item) => item.concluido === true)
+        .filter((item) => item.realizada === true)
         .map((item) => (
           <Tarefa
             key={item.id}
