@@ -4,8 +4,7 @@
 import { useState } from "react";
 import api from "@/service/api";
 import AuthInput from "@/components/AuthInput";
-import Cookie from "js-cookie";
-import { useRouter } from "next/navigation";
+import useAuthData from "@/data/hooks/useAuthData";
 
 export default function Autentificacao() {
     const [modo, setModo] = useState<"login" | "cadastro">("login");
@@ -14,25 +13,19 @@ export default function Autentificacao() {
     const [nome, setNome] = useState("");
     const [senha, setSenha] = useState("");
 
-    const router = useRouter()
+    const {singIn} = useAuthData()
+    
 
     const fazerLogin = async () => {
         if (modo === "login") {
-            await api
-                .post("/login", {
-                    email,
-                    senha,
-                })
-                .then((res) => {
-                    setEmail("");
-                    setSenha("");
-                    Cookie.set('auth_token', res.data.token)
-                    router.push('/')
-                })
-                .catch((err) => {
-                    console.log(err.response.data);
-                    setErro(err.response.data);
-                });
+            try{
+                await singIn({email, senha})
+            } catch(err){
+                setErro(err)
+            }
+
+            setEmail("");
+            setSenha("");
         } else {
             await api
                 .post("/usuario", {

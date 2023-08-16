@@ -2,9 +2,11 @@
 import useAppData from "@/data/hooks/useAppData";
 import { Search } from "lucide-react";
 import BotaoAlternarTema from '@/components/BotaoAlternarTema'
+import useAuthData from "@/data/hooks/useAuthData";
 
 export default function Header() {
   const { tema, alternarTema } = useAppData();
+  const {user} = useAuthData()
   return (
     <header
       className={`flex px-7 py-1.5 h-12 w-full  justify-between shadow-xl
@@ -26,6 +28,9 @@ export default function Header() {
         >
           By: Matheus Doerzbacher
         </span>
+      </div>
+      <div>
+        <h1 className="text-zinc-50">{user}</h1>
       </div>
       <div className="hidden sm:flex w-[9rem]"></div>
       <BotaoAlternarTema tema={tema} alternarTema={alternarTema} />
