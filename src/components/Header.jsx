@@ -29,9 +29,6 @@ export default function Header() {
           By: Matheus Doerzbacher
         </span>
       </div>
-      <div>
-        <h1 className={`${tema === "dark" ? "text-zinc-200" : "text-zinc-950"}`}>User: {user}</h1>
-      </div>
       <div className="hidden sm:flex w-[9rem]"></div>
       <BotaoAlternarTema tema={tema} alternarTema={alternarTema} />
     </header>
