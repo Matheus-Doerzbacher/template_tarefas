@@ -27,9 +27,28 @@ export default function useTarefas() {
         }
     }
 
-    useEffect(() => {
-        obterTarefas();
-    }, []);
+    useEffect(() => {  
+        
+        async function obterTarefasPrimeiro() {
+            try {
+                const { data }: any = await api.get("/tarefa", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+    
+                const tarefas = data.resultados;
+    
+                if (tarefas) {
+                    setTarefas(tarefas);
+                }
+            } catch (err) {
+                console.error(err.response.data);
+            }
+        }
+
+        obterTarefasPrimeiro();
+    }, [token]);
 
     async function adicionarTarefa(tarefa: string) {
         try {
@@ -51,7 +70,28 @@ export default function useTarefas() {
         }
     }
 
-    async function concluirTarefa(idTarefa: string) {
+    async function adicionarItemLista(tarefa: string) {
+        try {
+            await api.post(
+                "/tarefa",
+                {
+                    nome: tarefa,
+                    isListaCompra: true,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            obterTarefas();
+        } catch (err) {
+            console.log(err.response.data.message);
+        }
+    }
+
+    async function concluirTarefa(idTarefa: string, compras: Boolean = false) {
         try {
             api.patch(`/tarefa/realizar/${idTarefa}`);
 
@@ -66,26 +106,26 @@ export default function useTarefas() {
             obterTarefas();
 
             if (realizada !== true) {
-                toast.success("Tarefas concluida");
+                toast.success(compras ? "Item no carrinho" :"Tarefas concluida");
             }
         } catch (err) {
             console.log(err.response.data.message);
         }
     }
 
-    async function deletarTarefa(idTarefa: string) {
+    async function deletarTarefa(idTarefa: string, compras: Boolean = false) {
         try {
             console.log(idTarefa);
             await api.delete(`/tarefa/${idTarefa}`);
             obterTarefas();
-            toast.error("Tarefa deleteda");
+            toast.error(compras ? "Item deletado" : "Tarefa deleteda");
         } catch (err) {
             console.log(err.response.data.message);
         }
     }
 
     async function favoritar(idTarefa: string) {
-        try{
+        try {
             await api.patch(`/tarefa/favorito/${idTarefa}`);
             obterTarefas();
         } catch (err) {
@@ -99,5 +139,6 @@ export default function useTarefas() {
         concluirTarefa,
         deletarTarefa,
         favoritar,
+        adicionarItemLista,
     };
 }

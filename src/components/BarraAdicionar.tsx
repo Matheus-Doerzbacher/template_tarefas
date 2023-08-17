@@ -3,14 +3,17 @@ import { useEffect, useState } from "react";
 import { Circle, Plus } from "lucide-react";
 import useAppData from "@/data/hooks/useAppData";
 
-export default function BarraAdicionar({ addTarefa, compras }) {
+interface BarraAdicionarProps{
+  addTarefa: (tarefa: string) => void,
+  compras?: boolean
+}
+
+
+export default function BarraAdicionar({ addTarefa, compras }: BarraAdicionarProps) {
+  
   const {tema} = useAppData()
   const [inFocus, setInFocus] = useState("");
   const [tarefa, setTarefa] = useState("");
-
-  function addTarefas(novaTarefa) {
-    addTarefa(novaTarefa);
-  }
 
   return (
     <div className={`w-full h-12  flex items-center rounded mb-3
@@ -20,7 +23,7 @@ export default function BarraAdicionar({ addTarefa, compras }) {
         <button
           className={`px-5 py-3 ${tema === 'dark' ? 'text-[#55a4f0]' : 'text-[#004e97]'}`}
           onClick={() => {
-            addTarefas(tarefa), setTarefa("");
+            addTarefa(tarefa), setTarefa("");
           }}
         >
           {!inFocus ? (
@@ -38,7 +41,7 @@ export default function BarraAdicionar({ addTarefa, compras }) {
         value={tarefa}
         onKeyUp={(e) => {
           if (e.code === "Enter" || e.code === "NumpadEnter") {
-            addTarefas(tarefa);
+            addTarefa(tarefa);
             setTarefa("");
           }
         }}

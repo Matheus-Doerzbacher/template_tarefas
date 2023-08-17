@@ -12,6 +12,8 @@ export default function Tarefas() {
 
     const {tema} = useAppData()
 
+    console.log(tarefas)
+
   return (
     <>
       <HeaderMain nome="Tarefas">
@@ -20,7 +22,7 @@ export default function Tarefas() {
       <BarraAdicionar addTarefa={adicionarTarefa} />
 
       {tarefas
-        .filter((item) => item.realizada === false)
+        .filter((item) => !item.realizada && !item.isListaCompra)
         .map((item) => (
           <Tarefa
             key={item.id}
@@ -33,14 +35,14 @@ export default function Tarefas() {
           />
         ))}
 
-      {tarefas.filter((item) => item.realizada === true).length > 0 ? (
+      {tarefas.filter((item) => item.realizada && !item.isListaCompra).length > 0 ? (
         <h1 className="mt-5">Concluidas</h1>
       ) : (
         ""
       )}
 
       {tarefas
-        .filter((item) => item.realizada === true)
+        .filter((item) => item.realizada && !item.isListaCompra)
         .map((item) => (
           <Tarefa
             key={item.id}
