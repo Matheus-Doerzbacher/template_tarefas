@@ -20,7 +20,7 @@ export default function Favoritos() {
       </HeaderMain>
 
       {tarefas
-        .filter((item) => item.concluido == false && item.favorito == true)
+        .filter((item) => item.realizada == false && item.favorito == true)
         .map((item) => (
           <Tarefa
             key={item.id}
@@ -33,14 +33,14 @@ export default function Favoritos() {
           />
         ))}
 
-      {tarefas.filter((item) => item.concluido === true && item.favorito === true).length > 0 ? (
+      {tarefas.filter((item) => item.realizada === true && item.favorito === true).length > 0 ? (
         <h1 className="mt-5">Concluidas</h1>
       ) : (
         ""
       )}
 
       {tarefas
-        .filter((item) => item.concluido === true && item.favorito === true)
+        .filter((item) => item.realizada === true && item.favorito === true)
         .map((item) => (
           <Tarefa
             key={item.id}

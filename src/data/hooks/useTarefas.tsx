@@ -1,15 +1,16 @@
 import api from "@/service/api";
+import { data } from "autoprefixer";
 import { parseCookies } from "nookies";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function useTarefas() {
+    const { auth_token: token } = parseCookies();
     const [tarefas, setTarefas] = useState<any[]>([]);
 
     async function obterTarefas() {
         try {
-            const { auth_token: token } = parseCookies();
             const { data }: any = await api.get("/tarefa", {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -30,58 +31,66 @@ export default function useTarefas() {
         obterTarefas();
     }, []);
 
-    useEffect(() => {
-        localStorage.setItem("@minhastarefas", JSON.stringify(tarefas));
-    }, [tarefas]);
+    async function adicionarTarefa(tarefa: string) {
+        try {
+            await api.post(
+                "/tarefa",
+                {
+                    nome: tarefa,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
-    function adicionarTarefa(tarefa: string) {
-        const idTarefa = Math.floor(Date.now() * Math.random()).toString(36);
-
-        if (tarefa) {
-            const dataAtual = new Date();
-
-            const objetoTafefa = {
-                id: idTarefa,
-                nome: tarefa,
-                concluido: false,
-                data: dataAtual.toDateString(),
-                favorito: false,
-            };
-
-            setTarefas([...tarefas, objetoTafefa]);
+            obterTarefas();
+        } catch (err) {
+            console.log(err.response.data.message);
         }
     }
 
-    function concluirTarefa(tarefa: string) {
-        const indexTarefa = tarefas.findIndex((item) => item.id === tarefa);
+    async function concluirTarefa(idTarefa: string) {
+        try {
+            api.patch(`/tarefa/realizar/${idTarefa}`);
 
-        const tarefaSelecionada = tarefas[indexTarefa];
-        tarefaSelecionada.concluido = !tarefaSelecionada.concluido;
+            const tarefaRealizada = await api.get(`/tarefa/${idTarefa}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-        setTarefas(tarefas.filter((item) => item.id !== tarefa));
+            const realizada = tarefaRealizada.data.realizada;
 
-        setTarefas([...tarefas]);
+            obterTarefas();
 
-        if (tarefaSelecionada.concluido === true) {
-            toast.success("Tarefas concluida");
+            if (realizada !== true) {
+                toast.success("Tarefas concluida");
+            }
+        } catch (err) {
+            console.log(err.response.data.message);
         }
     }
 
-    function deletarTarefa(tarefa: string) {
-        setTarefas(tarefas.filter((item) => item.id !== tarefa));
-        toast.error("Tarefa deleteda");
+    async function deletarTarefa(idTarefa: string) {
+        try {
+            console.log(idTarefa);
+            await api.delete(`/tarefa/${idTarefa}`);
+            obterTarefas();
+            toast.error("Tarefa deleteda");
+        } catch (err) {
+            console.log(err.response.data.message);
+        }
     }
 
-    function favoritar(tarefa: string) {
-        const indexTarefa = tarefas.findIndex((item) => item.id === tarefa);
-
-        const tarefaSelecionada = tarefas[indexTarefa];
-
-        tarefaSelecionada.favorito = !tarefaSelecionada.favorito;
-
-        setTarefas(tarefas.filter((item) => item.id !== tarefa));
-
-        setTarefas([...tarefas]);
+    async function favoritar(idTarefa: string) {
+        try{
+            await api.patch(`/tarefa/favorito/${idTarefa}`);
+            obterTarefas();
+        } catch (err) {
+            console.log(err.response.data);
+        }
     }
 
     return {
