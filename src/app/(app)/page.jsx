@@ -12,6 +12,7 @@ export default function Home() {
         concluirTarefa,
         deletarTarefa,
         tarefas,
+        carregando,
         favoritar,
     } = useTarefas();
     const { tema } = useAppData();
@@ -21,6 +22,59 @@ export default function Home() {
     const ano = new Date().getFullYear();
 
     const dataAtual = `${dia}/${mes}/${ano}`;
+
+    function renderTarefas() {
+        return (
+            <>
+                {tarefas
+                    .filter(
+                        (item) =>
+                            !item.realizada &&
+                            item.data_criacao === dataAtual &&
+                            !item.isListaCompra
+                    )
+                    .map((item) => (
+                        <Tarefa
+                            key={item.id}
+                            nome={item.nome}
+                            concluirATarefa={() => concluirTarefa(item.id)}
+                            deletarTarefas={() => deletarTarefa(item.id)}
+                            data={item.data_criacao}
+                            isfavorito={item.favorito}
+                            favoritarTarefas={() => favoritar(item.id)}
+                        />
+                    ))}
+
+                {tarefas.filter(
+                    (item) =>
+                        item.realizada &&
+                        item.data_criacao === dataAtual &&
+                        !item.isListaCompra
+                ).length > 0 ? (
+                    <h1 className="mt-5">Concluidas</h1>
+                ) : (
+                    ""
+                )}
+
+                {tarefas
+                    .filter(
+                        (item) =>
+                            item.realizada &&
+                            item.data_criacao === dataAtual &&
+                            !item.isListaCompra
+                    )
+                    .map((item) => (
+                        <Tarefa
+                            key={item.id}
+                            nome={item.nome}
+                            concluirATarefa={() => concluirTarefa(item.id)}
+                            deletarTarefas={() => deletarTarefa(item.id)}
+                            concluida
+                        />
+                    ))}
+            </>
+        );
+    }
 
     return (
         <>
@@ -34,52 +88,7 @@ export default function Home() {
 
             <BarraAdicionar addTarefa={adicionarTarefa} />
 
-            {tarefas
-                .filter(
-                    (item) =>
-                        !item.realizada &&
-                        item.data_criacao === dataAtual &&
-                        !item.isListaCompra
-                )
-                .map((item) => (
-                    <Tarefa
-                        key={item.id}
-                        nome={item.nome}
-                        concluirATarefa={() => concluirTarefa(item.id)}
-                        deletarTarefas={() => deletarTarefa(item.id)}
-                        data={item.data_criacao}
-                        isfavorito={item.favorito}
-                        favoritarTarefas={() => favoritar(item.id)}
-                    />
-                ))}
-
-            {tarefas.filter(
-                (item) =>
-                    item.realizada &&
-                    item.data_criacao === dataAtual &&
-                    !item.isListaCompra
-            ).length > 0 ? (
-                <h1 className="mt-5">Concluidas</h1>
-            ) : (
-                ""
-            )}
-
-            {tarefas
-                .filter(
-                    (item) =>
-                        item.realizada &&
-                        item.data_criacao === dataAtual &&
-                        !item.isListaCompra
-                )
-                .map((item) => (
-                    <Tarefa
-                        key={item.id}
-                        nome={item.nome}
-                        concluirATarefa={() => concluirTarefa(item.id)}
-                        deletarTarefas={() => deletarTarefa(item.id)}
-                        concluida
-                    />
-                ))}
+            {carregando ? <h1>Carregando...</h1> : renderTarefas()}
         </>
     );
 }

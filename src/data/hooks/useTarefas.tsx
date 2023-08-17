@@ -8,9 +8,11 @@ import "react-toastify/dist/ReactToastify.css";
 export default function useTarefas() {
     const { auth_token: token } = parseCookies();
     const [tarefas, setTarefas] = useState<any[]>([]);
+    const [carregando, setCarregando] = useState<Boolean>(false);
 
     async function obterTarefas() {
         try {
+            setCarregando(true)
             const { data }: any = await api.get("/tarefa", {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -22,8 +24,12 @@ export default function useTarefas() {
             if (tarefas) {
                 setTarefas(tarefas);
             }
+
+            
         } catch (err) {
             console.error(err.response.data);
+        } finally {
+            setCarregando(false)
         }
     }
 
@@ -31,6 +37,7 @@ export default function useTarefas() {
         
         async function obterTarefasPrimeiro() {
             try {
+                setCarregando(true)
                 const { data }: any = await api.get("/tarefa", {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -42,8 +49,11 @@ export default function useTarefas() {
                 if (tarefas) {
                     setTarefas(tarefas);
                 }
+                setCarregando(false)
             } catch (err) {
                 console.error(err.response.data);
+            } finally {
+                setCarregando(false)
             }
         }
 
@@ -140,5 +150,6 @@ export default function useTarefas() {
         deletarTarefa,
         favoritar,
         adicionarItemLista,
+        carregando,
     };
 }
