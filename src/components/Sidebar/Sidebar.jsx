@@ -1,26 +1,20 @@
 "use client";
 
 import {
-    Search,
     SunMedium,
     ShoppingCart,
-    Home as HomeIcon,
     Menu,
     Star,
     FileText,
 } from "lucide-react";
 import SidebarMenu from "./SidebarMenu";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useAppData from "@/data/hooks/useAppData";
-import Cookie from "js-cookie";
-import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
     const { tema } = useAppData();
-    const [selecionado, setSelecionado] = useState("/");
     const [esconderMenu, setEsconderMenu] = useState(false);
 
-    const router = useRouter()
 
     function hiddenMenu() {
         if (esconderMenu) {
@@ -30,10 +24,7 @@ export default function Sidebar() {
         }
     }
 
-    function logout() {
-      Cookie.remove('auth_token')
-      router.push('/login')
-    }
+    
 
     return (
         <aside
@@ -115,14 +106,6 @@ export default function Sidebar() {
                         />
                     }
                 />
-            </div>
-            <div>
-                <button 
-                  className="flex m-auto text-red-500"
-                  onClick={logout}
-                >
-                  Logout
-                </button>
             </div>
         </aside>
     );

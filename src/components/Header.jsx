@@ -3,6 +3,7 @@ import useAppData from "@/data/hooks/useAppData";
 import { Search } from "lucide-react";
 import BotaoAlternarTema from '@/components/BotaoAlternarTema'
 import useAuthData from "@/data/hooks/useAuthData";
+import BotaoLogout from "./BotãoLogout";
 
 export default function Header() {
   const { tema, alternarTema } = useAppData();
@@ -30,7 +31,10 @@ export default function Header() {
         </span>
       </div>
       <div className="hidden sm:flex w-[9rem]"></div>
+      <div className={`flex items-center gap-4`}>
       <BotaoAlternarTema tema={tema} alternarTema={alternarTema} />
+      <BotaoLogout/>
+      </div>
     </header>
   );
 }

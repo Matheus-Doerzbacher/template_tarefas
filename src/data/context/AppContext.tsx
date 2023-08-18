@@ -17,7 +17,7 @@ interface AppContextProps {
 const AppContext = createContext<AppContextProps>({});
 
 export function AppProvider(props: any) {
-  const [tema, setTema] = useState<Tema>("");
+  const [tema, setTema] = useState<Tema>("dark");
 
   const obterTema = useCallback(() => {
     const tema = localStorage.getItem("@temaTarefas");

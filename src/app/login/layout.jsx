@@ -6,7 +6,7 @@ export const metadata = {
 export default function LayoutLogin({ children }) {
     return (
         <body className={`flex  flex-col w-screen h-screen`}>
-            <main className="flex flex-1 w-full">{children}</main>
+            <main>{children}</main>
         </body>
     );
 }
