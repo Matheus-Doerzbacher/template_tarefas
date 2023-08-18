@@ -1,8 +1,6 @@
 "use client";
-import BarraAdicionar from "@/components/BarraAdicionar";
 import HeaderMain from "../../../components/HeaderMain";
-import { ShoppingCart, Star } from "lucide-react";
-import useListaCompras from "@/data/hooks/useListaCompras";
+import { Star } from "lucide-react";
 import Tarefa from "@/components/Tarefas/Tarefa";
 import useTarefas from "@/data/hooks/useTarefas";
 import useAppData from "@/data/hooks/useAppData";
