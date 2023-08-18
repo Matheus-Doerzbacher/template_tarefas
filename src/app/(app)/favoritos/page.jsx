@@ -6,6 +6,7 @@ import useListaCompras from "@/data/hooks/useListaCompras";
 import Tarefa from "@/components/Tarefas/Tarefa";
 import useTarefas from "@/data/hooks/useTarefas";
 import useAppData from "@/data/hooks/useAppData";
+import ContainerLoading from '@/components/loading/ContainerLoading'
 
 export default function Favoritos() {
     const {
@@ -74,7 +75,7 @@ export default function Favoritos() {
                 />
             </HeaderMain>
 
-            {carregando ? <h1>Carregando...</h1> : renderTarefas()}
+            {carregando ? <ContainerLoading/> : renderTarefas()}
         </>
     );
 }

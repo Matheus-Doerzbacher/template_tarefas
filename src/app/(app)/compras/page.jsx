@@ -5,6 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import Tarefa from "@/components/Tarefas/Tarefa";
 import useAppData from "@/data/hooks/useAppData";
 import useTarefas from "@/data/hooks/useTarefas";
+import ContainerLoading from '@/components/loading/ContainerLoading'
 
 export default function Compras() {
     const {
@@ -13,6 +14,7 @@ export default function Compras() {
         tarefas,
         carregando,
         adicionarItemLista,
+        teste
     } = useTarefas();
 
     const { tema } = useAppData();
@@ -69,7 +71,9 @@ export default function Compras() {
             </HeaderMain>
             <BarraAdicionar addTarefa={adicionarItemLista} compras />
 
-            {carregando ? <h1>Carregando...</h1> : renderTarefas()}
+            {carregando ? <ContainerLoading/> : renderTarefas()}
+
+            {teste ? <ContainerLoading/> : ""}
         </>
     );
 }

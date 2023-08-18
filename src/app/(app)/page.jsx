@@ -5,6 +5,7 @@ import HeaderMain from "../../components/HeaderMain";
 import Tarefa from "../../components/Tarefas/Tarefa";
 import useTarefas from "@/data/hooks/useTarefas";
 import useAppData from "@/data/hooks/useAppData";
+import ContainerLoading from "@/components/loading/ContainerLoading";
 
 export default function Home() {
     const {
@@ -14,6 +15,7 @@ export default function Home() {
         tarefas,
         carregando,
         favoritar,
+        teste
     } = useTarefas();
     const { tema } = useAppData();
 
@@ -88,7 +90,9 @@ export default function Home() {
 
             <BarraAdicionar addTarefa={adicionarTarefa} />
 
-            {carregando ? <h1>Carregando...</h1> : renderTarefas()}
+            {carregando ? <ContainerLoading/> : renderTarefas()}
+
+            {teste ? <ContainerLoading/> : ""}
         </>
     );
 }

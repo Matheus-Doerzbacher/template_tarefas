@@ -9,10 +9,11 @@ export default function useTarefas() {
     const { auth_token: token } = parseCookies();
     const [tarefas, setTarefas] = useState<any[]>([]);
     const [carregando, setCarregando] = useState<Boolean>(false);
+    const [teste, setTeste] = useState<Boolean>(false);
 
     async function obterTarefas() {
         try {
-            setCarregando(true)
+            setTeste(true)
             const { data }: any = await api.get("/tarefa", {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -21,15 +22,18 @@ export default function useTarefas() {
 
             const tarefas = data.resultados;
 
+            console.log('Obter Tarefas: ', tarefas)
+
             if (tarefas) {
                 setTarefas(tarefas);
             }
 
             
         } catch (err) {
+            setTarefas([])
             console.error(err.response.data);
         } finally {
-            setCarregando(false)
+            setTeste(false)
         }
     }
 
@@ -49,6 +53,7 @@ export default function useTarefas() {
                 if (tarefas) {
                     setTarefas(tarefas);
                 }
+
                 setCarregando(false)
             } catch (err) {
                 console.error(err.response.data);
@@ -62,6 +67,7 @@ export default function useTarefas() {
 
     async function adicionarTarefa(tarefa: string) {
         try {
+            setTeste(true)
             await api.post(
                 "/tarefa",
                 {
@@ -82,6 +88,7 @@ export default function useTarefas() {
 
     async function adicionarItemLista(tarefa: string) {
         try {
+            setTeste(true)
             await api.post(
                 "/tarefa",
                 {
@@ -103,6 +110,7 @@ export default function useTarefas() {
 
     async function concluirTarefa(idTarefa: string, compras: Boolean = false) {
         try {
+            setTeste(true)
             api.patch(`/tarefa/realizar/${idTarefa}`);
 
             const tarefaRealizada = await api.get(`/tarefa/${idTarefa}`, {
@@ -125,10 +133,11 @@ export default function useTarefas() {
 
     async function deletarTarefa(idTarefa: string, compras: Boolean = false) {
         try {
+            setTeste(true)
             console.log(idTarefa);
             await api.delete(`/tarefa/${idTarefa}`);
-            obterTarefas();
             toast.error(compras ? "Item deletado" : "Tarefa deleteda");
+            obterTarefas();
         } catch (err) {
             console.log(err.response.data.message);
         }
@@ -136,6 +145,7 @@ export default function useTarefas() {
 
     async function favoritar(idTarefa: string) {
         try {
+            setTeste(true)
             await api.patch(`/tarefa/favorito/${idTarefa}`);
             obterTarefas();
         } catch (err) {
@@ -151,5 +161,6 @@ export default function useTarefas() {
         favoritar,
         adicionarItemLista,
         carregando,
+        teste
     };
 }
