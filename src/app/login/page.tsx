@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import api from "@/service/api";
 import AuthInput from "@/components/AuthInput";
 import useAuthData from "@/data/hooks/useAuthData";
+import Pacman from '@/components/animacao/Pacman'
 
 export default function Autentificacao() {
     const [modo, setModo] = useState<"login" | "cadastro">("login");
@@ -12,6 +13,7 @@ export default function Autentificacao() {
     const [email, setEmail] = useState("");
     const [nome, setNome] = useState("");
     const [senha, setSenha] = useState("");
+    const [carregando, setCarregando] = useState<Boolean>(false);
 
     const { singIn } = useAuthData();
 
@@ -22,9 +24,12 @@ export default function Autentificacao() {
     const fazerLogin = async () => {
         if (modo === "login") {
             try {
+                setCarregando(true)
                 await singIn({ email, senha });
             } catch (err) {
                 setErro(err.response.data);
+            } finally {
+                setCarregando(false)
             }
 
             setEmail("");
@@ -45,24 +50,15 @@ export default function Autentificacao() {
                 .catch((err) => {
                     console.error(err.response.data);
                 })
-                .finally ( () =>{
-                    setModo('login')
-
+                .finally(() => {
+                    setModo("login");
                 });
         }
     };
 
-    return (
-        <div className="flex  h-screen justify-center items-center">
-            <img
-                className=" h-screen w-full object-cover  "
-                src="https://cdn.wallpapersafari.com/9/57/PdJiN3.jpg"
-                alt="Imagen da tela de Autentificação"
-            />
-
-            <div className=" fixed w-full sm:w-2/3 md:w-1/2 xl:w-1/3 ">
-                <div className="bg-white/20 rounded-3xl m-5 py-1">
-                    <div className="m-5">
+    function RenderizarForm(){
+        return(
+            <div className="m-5">
                         <h1 className={` text-2xl font-bold mb-5 `}>
                             {modo === "login"
                                 ? "Entre com a Sua Conta"
@@ -72,10 +68,10 @@ export default function Autentificacao() {
                         {erro ? (
                             <div
                                 className={`
-                        flex items-center
-                        bg-red-400 text-white py-3 px-5 my-2
-                        border-2 border-red-700 rounded-lg
-                    `}
+                                    flex items-center
+                                    bg-red-400 text-white py-3 px-5 my-2
+                                    border-2 border-red-700 rounded-lg
+                                `}
                             >
                                 <span className="ml-3">{erro}</span>
                             </div>
@@ -114,9 +110,9 @@ export default function Autentificacao() {
                         <button
                             onClick={fazerLogin}
                             className={`
-                    w-full bg-indigo-500 hover:bg-indigo-400
-                    text-white rounded-lg px-4 py-3 mt-6
-                    `}
+                                w-full bg-indigo-500 hover:bg-indigo-400
+                                text-white rounded-lg px-4 py-3 mt-6
+                            `}
                         >
                             {modo === "login" ? "Entrar" : "Cadastrar"}
                         </button>
@@ -129,11 +125,9 @@ export default function Autentificacao() {
                                 <a
                                     onClick={() => setModo("cadastro")}
                                     className={`
-                            text-blue-500 hover:text-blue-700 font-semibold
-                            cursor-pointer
-                        `}
+                                        text-blue-500 hover:text-blue-700 font-semibold cursor-pointer
+                                    `}
                                 >
-                                    {" "}
                                     Crie uma conta gratuitamente
                                 </a>
                             </p>
@@ -143,16 +137,37 @@ export default function Autentificacao() {
                                 <a
                                     onClick={() => setModo("login")}
                                     className={`
-                            text-blue-500 hover:text-blue-700 font-semibold
-                            cursor-pointer
-                        `}
+                                        text-blue-500 hover:text-blue-700 font-semibold cursor-pointer
+                                    `}
                                 >
-                                    {" "}
                                     Entre com a suas Credenciais
                                 </a>
                             </p>
                         )}
                     </div>
+        )
+    }
+
+    return (
+        <div className="flex  h-screen justify-center items-center">
+            <img
+                className=" h-screen w-full object-cover  "
+                src="https://cdn.wallpapersafari.com/9/57/PdJiN3.jpg"
+                alt="Imagen da tela de Autentificação"
+            />
+
+            <div className=" fixed w-full sm:w-2/3 md:w-1/2 xl:w-1/3 ">
+                <div className="bg-white/20 rounded-3xl m-5 py-1">
+                    {carregando 
+                    ?
+                        <div className="m-5">
+                            <div className="flex items-center justify-center">
+                                <Pacman/>
+                            </div>
+                        </div>
+                    :
+                        RenderizarForm()
+                    }
                 </div>
             </div>
         </div>
