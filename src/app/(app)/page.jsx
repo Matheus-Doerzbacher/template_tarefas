@@ -1,5 +1,5 @@
 "use client";
-import { SunIcon } from "lucide-react";
+import { FileText, SunIcon } from "lucide-react";
 import BarraAdicionar from "../../components/BarraAdicionar";
 import HeaderMain from "../../components/HeaderMain";
 import Tarefa from "../../components/Tarefas/Tarefa";
@@ -30,10 +30,7 @@ export default function Home() {
             <>
                 {tarefas
                     .filter(
-                        (item) =>
-                            !item.realizada &&
-                            item.data_criacao === dataAtual &&
-                            !item.isListaCompra
+                        (item) => !item.realizada && !item.isListaCompra
                     )
                     .map((item) => (
                         <Tarefa
@@ -48,10 +45,7 @@ export default function Home() {
                     ))}
 
                 {tarefas.filter(
-                    (item) =>
-                        item.realizada &&
-                        item.data_criacao === dataAtual &&
-                        !item.isListaCompra
+                    (item) => item.realizada && !item.isListaCompra
                 ).length > 0 ? (
                     <h1 className="mt-5">Concluidas</h1>
                 ) : (
@@ -60,10 +54,7 @@ export default function Home() {
 
                 {tarefas
                     .filter(
-                        (item) =>
-                            item.realizada &&
-                            item.data_criacao === dataAtual &&
-                            !item.isListaCompra
+                        (item) => item.realizada && !item.isListaCompra
                     )
                     .map((item) => (
                         <Tarefa
@@ -80,8 +71,8 @@ export default function Home() {
 
     return (
         <>
-            <HeaderMain nome="Meu Dia">
-                <SunIcon
+            <HeaderMain nome="Tarefas">
+                <FileText
                     className={`${
                         tema === "dark" ? "text-zinc-400" : "text-zinc-700"
                     }`}

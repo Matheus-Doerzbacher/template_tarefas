@@ -22,7 +22,7 @@ export const config = {
     matcher: [
         '/',
         '/login',
-        '/tarefas',
+        '/dia',
         '/favoritos',
         '/compras'
     ]

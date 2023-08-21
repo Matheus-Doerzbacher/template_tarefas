@@ -44,11 +44,11 @@ export default function Sidebar() {
                     />
                 </button>
                 <SidebarMenu
-                    nome="Meu Dia"
+                    nome="Tarefas"
                     href="/"
                     esconderMenu={esconderMenu}
                     icon={
-                        <SunMedium
+                        <FileText
                             size={20}
                             className={`${
                                 tema === "dark"
@@ -59,12 +59,12 @@ export default function Sidebar() {
                     }
                 />
 
-                <SidebarMenu
-                    nome="Tarefas"
-                    href="/tarefas"
+                {/* <SidebarMenu
+                    nome="Meu dia"
+                    href="/dia"
                     esconderMenu={esconderMenu}
                     icon={
-                        <FileText
+                        <SunMedium
                             size={20}
                             className={`${
                                 tema === "dark"
@@ -73,7 +73,7 @@ export default function Sidebar() {
                             }`}
                         />
                     }
-                />
+                /> */}
 
                 <SidebarMenu
                     nome="Favoritos"

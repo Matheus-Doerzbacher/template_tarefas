@@ -6,6 +6,7 @@ import { FileText, HomeIcon } from "lucide-react";
 import useTarefas from "../../../data/hooks/useTarefas";
 import useAppData from "@/data/hooks/useAppData";
 import ContainerLoading from "@/components/loading/ContainerLoading";
+import { SunIcon } from "lucide-react";
 
 export default function Tarefas() {
     const {
@@ -20,13 +21,20 @@ export default function Tarefas() {
 
     const { tema } = useAppData();
 
-    console.log(tarefas);
+    const dia = new Date().getDate();
+    const mes = new Date().getMonth() + 1;
+    const ano = new Date().getFullYear();
+
+    const dataAtual = `${dia}/${mes}/${ano}`;
 
     function renderTarefas() {
         return (
             <>
                 {tarefas
-                    .filter((item) => !item.realizada && !item.isListaCompra)
+                    .filter((item) => 
+                        !item.realizada &&
+                        item.data_criacao === dataAtual &&
+                        !item.isListaCompra)
                     .map((item) => (
                         <Tarefa
                             key={item.id}
@@ -39,7 +47,11 @@ export default function Tarefas() {
                         />
                     ))}
 
-                {tarefas.filter((item) => item.realizada && !item.isListaCompra)
+                {tarefas.filter((item) => 
+                    item.realizada &&
+                    item.data_criacao === dataAtual &&
+                    !item.isListaCompra
+                )
                     .length > 0 ? (
                     <h1 className="mt-5">Concluidas</h1>
                 ) : (
@@ -47,7 +59,11 @@ export default function Tarefas() {
                 )}
 
                 {tarefas
-                    .filter((item) => item.realizada && !item.isListaCompra)
+                    .filter((item) => 
+                        item.realizada &&
+                        item.data_criacao === dataAtual &&
+                        !item.isListaCompra
+                    )
                     .map((item) => (
                         <Tarefa
                             key={item.id}
@@ -63,8 +79,8 @@ export default function Tarefas() {
 
     return (
         <>
-            <HeaderMain nome="Tarefas">
-                <FileText
+            <HeaderMain nome="Meu Dia">
+                <SunIcon
                     className={`${
                         tema === "dark" ? "text-home-color" : "text-[#507464]"
                     }`}
