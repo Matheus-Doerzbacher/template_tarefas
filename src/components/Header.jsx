@@ -22,13 +22,13 @@ export default function Header() {
         >
           Minhas Tarefas
         </h1>
-        <span
+        {/* <span
           className={`font-light text-xs
           ${tema === "dark" ? "text-zinc-200" : "text-zinc-950"}
         `}
         >
           By: Matheus Doerzbacher
-        </span>
+        </span> */}
       </div>
       <div className="hidden sm:flex w-[9rem]"></div>
       <div className={`flex items-center gap-4`}>
