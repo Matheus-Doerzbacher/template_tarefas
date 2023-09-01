@@ -33,14 +33,15 @@ export default function Home() {
                         (item) => !item.realizada && !item.isListaCompra
                     )
                     .map((item) => (
+                        console.log('item: ', item),
                         <Tarefa
                             key={item.id}
                             nome={item.nome}
-                            concluirATarefa={() => concluirTarefa(item.id)}
-                            deletarTarefas={() => deletarTarefa(item.id)}
+                            concluirATarefa={() => concluirTarefa(item)}
+                            deletarTarefas={() => deletarTarefa(item)}
                             data={item.data_criacao}
                             isfavorito={item.favorito}
-                            favoritarTarefas={() => favoritar(item.id)}
+                            favoritarTarefas={() => favoritar(item)}
                         />
                     ))}
 
@@ -60,8 +61,8 @@ export default function Home() {
                         <Tarefa
                             key={item.id}
                             nome={item.nome}
-                            concluirATarefa={() => concluirTarefa(item.id)}
-                            deletarTarefas={() => deletarTarefa(item.id)}
+                            concluirATarefa={() => concluirTarefa(item)}
+                            deletarTarefas={() => deletarTarefa(item)}
                             concluida
                         />
                     ))}

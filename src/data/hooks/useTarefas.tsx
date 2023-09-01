@@ -1,84 +1,82 @@
+import { auth, db } from "@/firebase";
 import api from "@/service/api";
-import { data } from "autoprefixer";
+import { User, UserCredential, onAuthStateChanged } from "firebase/auth";
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    onSnapshot,
+    query,
+    updateDoc,
+} from "firebase/firestore";
 import { parseCookies } from "nookies";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+function dataAtual() {
+    const dia = new Date().getDate();
+    const mes = new Date().getMonth() + 1;
+    const ano = new Date().getFullYear();
+
+    const data = `${dia}/${mes}/${ano}`;
+
+    return data;
+}
 
 export default function useTarefas() {
     const { auth_token: token } = parseCookies();
     const [tarefas, setTarefas] = useState<any[]>([]);
     const [carregando, setCarregando] = useState<Boolean>(false);
     const [teste, setTeste] = useState<Boolean>(false);
+    const [user, setUser] = useState<User>(null);
 
     async function obterTarefas() {
         try {
-            setTeste(true)
-            const { data }: any = await api.get("/tarefa", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            const tarefas = data.resultados;
-
-            console.log('Obter Tarefas: ', tarefas)
-
-            if (tarefas) {
-                setTarefas(tarefas);
-            }
-
             
+            const q = query(collection(db, "tarefas"));
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                let tarefasArr = [];
+                querySnapshot.forEach((doc) => {
+                        tarefasArr.push({ ...doc.data(), id: doc.id });
+                });
+                    setTarefas(tarefasArr);
+            });
+            return () => unsubscribe();
         } catch (err) {
-            setTarefas([])
+            setTarefas([]);
             console.error(err.response.data);
         } finally {
-            setTeste(false)
+            setTeste(false);
         }
     }
 
-    useEffect(() => {  
-        
-        async function obterTarefasPrimeiro() {
-            try {
-                setCarregando(true)
-                const { data }: any = await api.get("/tarefa", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+    useEffect(() => {
+        onAuthStateChanged(auth, async (user) => setUser(user));
+            
+            const q = query(collection(db, "tarefas"));
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                let tarefasArr = [];
+                querySnapshot.forEach((doc) => {
+                        tarefasArr.push({ ...doc.data(), id: doc.id });
                 });
-    
-                const tarefas = data.resultados;
-    
-                if (tarefas) {
-                    setTarefas(tarefas);
-                }
+                    setTarefas(tarefasArr);
+            });
+            return () => unsubscribe();
+    }, []);
 
-                setCarregando(false)
-            } catch (err) {
-                console.error(err.response.data);
-            } finally {
-                setCarregando(false)
-            }
-        }
-
-        obterTarefasPrimeiro();
-    }, [token]);
 
     async function adicionarTarefa(tarefa: string) {
         try {
-            setTeste(true)
-            await api.post(
-                "/tarefa",
-                {
-                    nome: tarefa,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await addDoc(collection(db, "tarefas"), {
+                nome: tarefa,
+                realizada: false,
+                favorito: false,
+                data_criacao: dataAtual(),
+                isListaCompra: false,
+                usuario: user.uid,
+            });
 
             obterTarefas();
         } catch (err) {
@@ -88,19 +86,14 @@ export default function useTarefas() {
 
     async function adicionarItemLista(tarefa: string) {
         try {
-            setTeste(true)
-            await api.post(
-                "/tarefa",
-                {
-                    nome: tarefa,
-                    isListaCompra: true,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await addDoc(collection(db, "tarefas"), {
+                nome: tarefa,
+                realizada: false,
+                favorito: false,
+                data_criacao: dataAtual(),
+                isListaCompra: true,
+                usuario: user.uid,
+            });
 
             obterTarefas();
         } catch (err) {
@@ -108,34 +101,29 @@ export default function useTarefas() {
         }
     }
 
-    async function concluirTarefa(idTarefa: string, compras: Boolean = false) {
+    async function concluirTarefa(tarefa: any, compras: Boolean = false) {
         try {
-            setTeste(true)
-            api.patch(`/tarefa/realizar/${idTarefa}`);
+            setTeste(true);
 
-            const tarefaRealizada = await api.get(`/tarefa/${idTarefa}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            await updateDoc(doc(db, "tarefas", tarefa.id), {
+                realizada: !tarefa.realizada,
             });
 
-            const realizada = tarefaRealizada.data.realizada;
-
             obterTarefas();
-
-            if (realizada !== true) {
-                toast.success(compras ? "Item no carrinho" :"Tarefas concluida");
+            if (tarefa.realizada === false) {
+                toast.success(
+                    compras ? "Item no carrinho" : "Tarefas concluida"
+                );
             }
         } catch (err) {
             console.log(err.response.data.message);
         }
     }
 
-    async function deletarTarefa(idTarefa: string, compras: Boolean = false) {
+    async function deletarTarefa(tarefa: any, compras: Boolean = false) {
         try {
-            setTeste(true)
-            console.log(idTarefa);
-            await api.delete(`/tarefa/${idTarefa}`);
+            setTeste(true);
+            await deleteDoc(doc(db, "tarefas", tarefa.id));
             toast.error(compras ? "Item deletado" : "Tarefa deleteda");
             obterTarefas();
         } catch (err) {
@@ -143,10 +131,13 @@ export default function useTarefas() {
         }
     }
 
-    async function favoritar(idTarefa: string) {
+    async function favoritar(tarefa: any) {
         try {
-            setTeste(true)
-            await api.patch(`/tarefa/favorito/${idTarefa}`);
+            setTeste(true);
+            await updateDoc(doc(db, "tarefas", tarefa.id), {
+                favorito: !tarefa.favorito,
+            });
+
             obterTarefas();
         } catch (err) {
             console.log(err.response.data);
@@ -161,6 +152,6 @@ export default function useTarefas() {
         favoritar,
         adicionarItemLista,
         carregando,
-        teste
+        teste,
     };
 }

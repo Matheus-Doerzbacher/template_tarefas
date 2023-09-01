@@ -2,7 +2,6 @@
 import BarraAdicionar from "@/components/BarraAdicionar";
 import HeaderMain from "@/components/HeaderMain";
 import Tarefa from "@/components/Tarefas/Tarefa";
-import { FileText, HomeIcon } from "lucide-react";
 import useTarefas from "../../../data/hooks/useTarefas";
 import useAppData from "@/data/hooks/useAppData";
 import ContainerLoading from "@/components/loading/ContainerLoading";

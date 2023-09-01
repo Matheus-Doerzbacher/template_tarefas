@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
 export default function middleware(req: NextRequest){
-    const token = req.cookies.get('auth_token')?.value
+    const token = req.cookies.get('auth-minhas-tarefas')?.value
 
     const signInURL = new URL('/login', req.url)
     const homeURL = new URL('/', req.url)

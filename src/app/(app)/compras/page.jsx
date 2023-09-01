@@ -29,9 +29,9 @@ export default function Compras() {
                             key={item.id}
                             nome={item.nome}
                             concluirATarefa={() =>
-                                concluirTarefa(item.id, true)
+                                concluirTarefa(item, true)
                             }
-                            deletarTarefas={() => deletarTarefa(item.id, true)}
+                            deletarTarefas={() => deletarTarefa(item, true)}
                             compras
                         />
                     ))}
@@ -50,9 +50,9 @@ export default function Compras() {
                             key={item.id}
                             nome={item.nome}
                             concluirATarefa={() =>
-                                concluirTarefa(item.id, true)
+                                concluirTarefa(item, true)
                             }
-                            deletarTarefas={() => deletarTarefa(item.id, true)}
+                            deletarTarefas={() => deletarTarefa(item, true)}
                             concluida
                         />
                     ))}

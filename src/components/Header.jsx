@@ -1,13 +1,12 @@
 "use client";
 import useAppData from "@/data/hooks/useAppData";
-import { Search } from "lucide-react";
 import BotaoAlternarTema from '@/components/BotaoAlternarTema'
-import useAuthData from "@/data/hooks/useAuthData";
+import {useAuthUser} from '@/data/context/AuthContext'
 import BotaoLogout from "./BotãoLogout";
 
 export default function Header() {
   const { tema, alternarTema } = useAppData();
-  const {user} = useAuthData()
+  const {usuario} = useAuthUser()
   return (
     <header
       className={`flex px-7 py-1.5 h-12 w-full  justify-between shadow-xl
@@ -28,7 +27,7 @@ export default function Header() {
         `}
         >
           {/* By: Matheus Doerzbacher */}
-          {user}
+          {/* {usuario} */}
         </span>
       </div>
       <div className="hidden sm:flex w-[9rem]"></div>

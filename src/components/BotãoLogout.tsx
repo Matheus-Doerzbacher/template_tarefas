@@ -1,19 +1,14 @@
-import Cookie from "js-cookie";
+import { useAuthUser } from "@/data/context/AuthContext";
 import { LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 
 export default function BotaoLogout(){
-    const router = useRouter()
 
-    function logout() {
-        Cookie.remove('auth_token')
-        router.push('/login')
-      }
+    const {logOut} = useAuthUser()
 
 
     return (
-        <div className="flex gap-2 text-red-500 cursor-pointer" onClick={logout}>
+        <div className="flex gap-2 text-red-500 cursor-pointer" onClick={logOut}>
                 <span className="hidden md:flex">Sair</span>
                 <LogOut/>
             </div>
