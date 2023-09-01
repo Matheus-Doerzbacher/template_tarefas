@@ -5,6 +5,7 @@ import Usuario from "@/model/User";
 import Cookies from "js-cookie";
 import { auth } from "@/firebase";
 import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import useTarefas from "../hooks/useTarefas";
 
 interface AuthContextProps {
     usuario?: Usuario;
@@ -37,13 +38,38 @@ export function AuthProvider({ children }: any) {
 
     const route = useRouter();
 
-    async function gerenciarSessao(user) {
-        if (user) {
-            Cookies.set("auth-minhas-tarefas", user.accessToken, {
+    useEffect(() => {
+        const token = Cookies.get("auth-minhas-tarefas");
+        if (token) {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    const usuario = await usuarioNormalizado(user)
+                    
+                    if (token === usuario.token) {
+                        await gerenciarSessao(usuario);
+                    } else {
+                        Cookies.remove("auth-minhas-tarefas");
+                        Cookies.remove("user-minhas-tarefas");
+                        route.push("/login");
+                        return false;
+                    }
+                } else {
+                    console.log("No authentication");
+                    route.push("/login");
+                }
+            });
+        }
+    }, [route]);
+
+    async function gerenciarSessao(usuario) {
+        if (usuario) {
+            Cookies.set("auth-minhas-tarefas", usuario.token, {
                 expires: 7,
             });
-            const userNormalizado = await usuarioNormalizado(user);
-            setUsuario(userNormalizado);
+            Cookies.set("user-minhas-tarefas", usuario.id?? 'teste', {
+                expires: 7,
+            });
+            setUsuario(usuario);
         }
     }
 
@@ -57,7 +83,8 @@ export function AuthProvider({ children }: any) {
             );
 
             if (user) {
-                await gerenciarSessao(user);
+                const usuario = await usuarioNormalizado(user)
+                await gerenciarSessao(usuario);
             }
 
             route.push("/");
@@ -77,7 +104,8 @@ export function AuthProvider({ children }: any) {
                 senha
             );
             if (user) {
-                await gerenciarSessao(user);
+                const usuario = await usuarioNormalizado(user)
+                await gerenciarSessao(usuario);
             }
             route.push("/");
         } catch (err) {
@@ -94,7 +122,8 @@ export function AuthProvider({ children }: any) {
             const { user } = await signInWithPopup(auth, provider);
 
             if (user) {
-                await gerenciarSessao(user);
+                const usuario = await usuarioNormalizado(user)
+                await gerenciarSessao(usuario);
             }
 
             route.push("/");
@@ -115,25 +144,7 @@ export function AuthProvider({ children }: any) {
         }
     }
 
-    useEffect(() => {
-        const token = Cookies.get("auth-minhas-tarefas");
-        if (token) {
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    if (token === (await user.getIdToken())) {
-                        gerenciarSessao(user);
-                    } else {
-                        Cookies.remove("auth-minhas-tarefas");
-                        route.push("/login");
-                        return false;
-                    }
-                } else {
-                    console.log("No authentication");
-                    route.push("/login");
-                }
-            });
-        }
-    }, [route]);
+    
 
     return (
         <AuthContext.Provider

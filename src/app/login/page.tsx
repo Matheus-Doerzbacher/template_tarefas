@@ -29,6 +29,9 @@ export default function Autentificacao() {
             } catch (err) {
                 if (err.message === "Firebase: Error (auth/invalid-email)." || err.message === "Firebase: Error (auth/wrong-password)."){
                     setErro("Email ou senha inválios");
+                if (err.message === "Firebase: Error (auth/user-not-found)."){
+                    setErro("Usuario não encontado")
+                }
                 }else {
                     setErro(err.message);
                 }

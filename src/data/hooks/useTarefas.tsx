@@ -1,6 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { auth, db } from "@/firebase";
-import api from "@/service/api";
-import { User, UserCredential, onAuthStateChanged } from "firebase/auth";
 import {
     addDoc,
     collection,
@@ -13,7 +12,9 @@ import {
 import { parseCookies } from "nookies";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useAuthUser } from "@/data/context/AuthContext";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from "js-cookie";
 
 function dataAtual() {
     const dia = new Date().getDate();
@@ -30,42 +31,47 @@ export default function useTarefas() {
     const [tarefas, setTarefas] = useState<any[]>([]);
     const [carregando, setCarregando] = useState<Boolean>(false);
     const [teste, setTeste] = useState<Boolean>(false);
-    const [user, setUser] = useState<User>(null);
 
-    async function obterTarefas() {
+    const {usuario} = useAuthUser()
+
+    const idUsuario = Cookies.get('user-minhas-tarefas')
+
+    const obterTarefas = async () => {
         try {
-            
             const q = query(collection(db, "tarefas"));
             const unsubscribe = onSnapshot(q, (querySnapshot) => {
                 let tarefasArr = [];
+
                 querySnapshot.forEach((doc) => {
+                    if (doc.data().usuario === idUsuario) {
                         tarefasArr.push({ ...doc.data(), id: doc.id });
+                    }
                 });
-                    setTarefas(tarefasArr);
+                setTarefas(tarefasArr);
             });
             return () => unsubscribe();
         } catch (err) {
             setTarefas([]);
-            console.error(err.response.data);
+            console.error(err.message);
         } finally {
             setTeste(false);
         }
-    }
+    };
 
     useEffect(() => {
-        onAuthStateChanged(auth, async (user) => setUser(user));
-            
-            const q = query(collection(db, "tarefas"));
-            const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                let tarefasArr = [];
-                querySnapshot.forEach((doc) => {
-                        tarefasArr.push({ ...doc.data(), id: doc.id });
-                });
+                const q = query(collection(db, "tarefas"));
+                const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                    let tarefasArr = [];
+                    
+                    querySnapshot.forEach((doc) => {
+                        if (doc.data().usuario === idUsuario) {
+                            tarefasArr.push({ ...doc.data(), id: doc.id });
+                        }
+                    });
                     setTarefas(tarefasArr);
-            });
-            return () => unsubscribe();
+                });
+                return () => unsubscribe();
     }, []);
-
 
     async function adicionarTarefa(tarefa: string) {
         try {
@@ -75,12 +81,12 @@ export default function useTarefas() {
                 favorito: false,
                 data_criacao: dataAtual(),
                 isListaCompra: false,
-                usuario: user.uid,
+                usuario: usuario.id,
             });
 
             obterTarefas();
         } catch (err) {
-            console.log(err.response.data.message);
+            console.log(err.message);
         }
     }
 
@@ -92,12 +98,12 @@ export default function useTarefas() {
                 favorito: false,
                 data_criacao: dataAtual(),
                 isListaCompra: true,
-                usuario: user.uid,
+                usuario: usuario.id,
             });
 
             obterTarefas();
         } catch (err) {
-            console.log(err.response.data.message);
+            console.log(err.message);
         }
     }
 
@@ -116,7 +122,7 @@ export default function useTarefas() {
                 );
             }
         } catch (err) {
-            console.log(err.response.data.message);
+            console.log(err.message);
         }
     }
 
@@ -127,7 +133,7 @@ export default function useTarefas() {
             toast.error(compras ? "Item deletado" : "Tarefa deleteda");
             obterTarefas();
         } catch (err) {
-            console.log(err.response.data.message);
+            console.log(err.message);
         }
     }
 
@@ -140,7 +146,7 @@ export default function useTarefas() {
 
             obterTarefas();
         } catch (err) {
-            console.log(err.response.data);
+            console.log(err.message);
         }
     }
 

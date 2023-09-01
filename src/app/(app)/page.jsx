@@ -33,7 +33,6 @@ export default function Home() {
                         (item) => !item.realizada && !item.isListaCompra
                     )
                     .map((item) => (
-                        console.log('item: ', item),
                         <Tarefa
                             key={item.id}
                             nome={item.nome}
