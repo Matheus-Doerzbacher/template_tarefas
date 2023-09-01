@@ -27,7 +27,7 @@ export default function Header() {
         `}
         >
           {/* By: Matheus Doerzbacher */}
-          {usuario?.email}
+          {usuario?.nome}
         </span>
       </div>
       <div className="hidden sm:flex w-[9rem]"></div>

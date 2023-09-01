@@ -4,14 +4,13 @@ import { useRouter } from "next/navigation";
 import Usuario from "@/model/User";
 import Cookies from "js-cookie";
 import { auth } from "@/firebase";
-import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
-import useTarefas from "../hooks/useTarefas";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 
 interface AuthContextProps {
     usuario?: Usuario;
     carregando?: boolean;
     login?: (email: string, senha: string) => Promise<void>;
-    cadastrar?: (email: string, senha: string) => Promise<void>;
+    cadastrar?: (email: string, senha: string, nome: string) => Promise<void>;
     loginGoogle?: () => Promise<void>;
     logOut?: () => Promise<void>;
 }
@@ -95,7 +94,7 @@ export function AuthProvider({ children }: any) {
         }
     }
 
-    async function cadastrar(email, senha) {
+    async function cadastrar(email, senha, nome) {
         try {
             setCarregando(true);
             const { user } = await createUserWithEmailAndPassword(
@@ -103,8 +102,14 @@ export function AuthProvider({ children }: any) {
                 email,
                 senha
             );
+
             if (user) {
-                const usuario = await usuarioNormalizado(user)
+                
+                await updateProfile(user, {
+                    displayName: nome
+                  })
+                
+                  const usuario = await usuarioNormalizado(user)
                 await gerenciarSessao(usuario);
             }
             route.push("/");

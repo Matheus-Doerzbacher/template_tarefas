@@ -5,15 +5,15 @@ import { initializeApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
 // Your web app's Firebase configuration
+
 const firebaseConfig = {
-    apiKey: "AIzaSyAuIjZrJ8UJ1_xhJpOiy72OlXCOkH-6ltM",
-    authDomain: "minhas-tarefas-d0110.firebaseapp.com",
-    projectId: "minhas-tarefas-d0110",
-    storageBucket: "minhas-tarefas-d0110.appspot.com",
-    messagingSenderId: "794836573575",
-    appId: "1:794836573575:web:d87292884ac097f01c0722",
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID,
 };
 
 // Initialize Firebase

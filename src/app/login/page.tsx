@@ -25,34 +25,35 @@ export default function Autentificacao() {
             try {
                 setCarregando(true);
                 await login(email, senha);
-            
             } catch (err) {
-                if (err.message === "Firebase: Error (auth/invalid-email)." || err.message === "Firebase: Error (auth/wrong-password)."){
+                if (
+                    err.message === "Firebase: Error (auth/invalid-email)." ||
+                    err.message === "Firebase: Error (auth/wrong-password)."
+                ) {
                     setErro("Email ou senha inválios");
-                if (err.message === "Firebase: Error (auth/user-not-found)."){
-                    setErro("Usuario não encontado")
-                }
-                }else {
+                } else if (
+                    err.message === "Firebase: Error (auth/user-not-found)."
+                ) {
+                    setErro("Usuario não encontado");
+                } else {
                     setErro(err.message);
                 }
             } finally {
                 setCarregando(false);
             }
-
             setEmail("");
             setSenha("");
         } else {
             try {
-                await cadastrar(email, senha);
-
+                await cadastrar(email, senha, nome);
                 setEmail("");
                 setSenha("");
                 setNome("");
                 setModo("login");
             } catch (err) {
-                if (err.message === "Firebase: Error (auth/invalid-email)."){
+                if (err.message === "Firebase: Error (auth/invalid-email).") {
                     setErro("Email inválido");
-                }else {
+                } else {
                     setErro(err.message);
                 }
             }
@@ -88,7 +89,6 @@ export default function Autentificacao() {
                         tipo="text"
                         valor={nome}
                         valorMudou={setNome}
-                        obrigatorio
                         fazerLogin={fazerLogin}
                     />
                 )}
@@ -98,7 +98,6 @@ export default function Autentificacao() {
                     tipo="email"
                     valor={email}
                     valorMudou={setEmail}
-                    obrigatorio
                     fazerLogin={fazerLogin}
                 />
                 <AuthInput
@@ -106,7 +105,6 @@ export default function Autentificacao() {
                     tipo="password"
                     valor={senha}
                     valorMudou={setSenha}
-                    obrigatorio
                     fazerLogin={fazerLogin}
                 />
 
@@ -123,8 +121,10 @@ export default function Autentificacao() {
                 <hr className="my-6 border-gray-300 w-full" />
 
                 {modo === "login" ? (
-                    <p className="mt-8">
+                    <div className="flex flex-col  items-center mt-8">
+                    <p className="">
                         Novo por aqui?
+                        </p>
                         <a
                             onClick={() => setModo("cadastro")}
                             className={`
@@ -133,19 +133,19 @@ export default function Autentificacao() {
                         >
                             Crie uma conta gratuitamente
                         </a>
-                    </p>
+                    </div>
                 ) : (
-                    <p className="mt-8">
-                        Ja faz parte da nossa comunidade?
+                    <div className="flex flex-col  items-center mt-8">
+                        <p className="">Ja faz parte da nossa comunidade?</p>
                         <a
                             onClick={() => setModo("login")}
                             className={`
-                                        text-blue-500 hover:text-blue-700 font-semibold cursor-pointer
-                                    `}
+                            text-blue-500 hover:text-blue-700 font-semibold cursor-pointer
+                            `}
                         >
                             Entre com a suas Credenciais
                         </a>
-                    </p>
+                    </div>
                 )}
             </div>
         );
