@@ -46,11 +46,6 @@ export function AuthProvider({ children }: any) {
                     
                     if (token === usuario.token) {
                         await gerenciarSessao(usuario);
-                    } else {
-                        Cookies.remove("auth-minhas-tarefas");
-                        Cookies.remove("user-minhas-tarefas");
-                        route.push("/login");
-                        return false;
                     }
                 } else {
                     console.log("No authentication");
@@ -142,6 +137,7 @@ export function AuthProvider({ children }: any) {
             setCarregando(true);
             await signOut(auth);
             Cookies.remove("auth-minhas-tarefas");
+            Cookies.remove("user-minhas-tarefas");
             setUsuario(null);
             route.push("/login");
         } finally {
