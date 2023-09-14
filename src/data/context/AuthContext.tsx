@@ -4,7 +4,17 @@ import { useRouter } from "next/navigation";
 import Usuario from "@/model/User";
 import Cookies from "js-cookie";
 import { auth } from "@/firebase";
-import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
+import {
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    signOut,
+    updateProfile,
+    setPersistence,
+    browserLocalPersistence,
+} from "firebase/auth";
 
 interface AuthContextProps {
     usuario?: Usuario;
@@ -19,7 +29,7 @@ const AuthContext = createContext<AuthContextProps>({});
 export function AuthProvider({ children }: any) {
     const [carregando, setCarregando] = useState(true);
     const [usuario, setUsuario] = useState<Usuario>();
-    
+
     const route = useRouter();
 
     const usuarioNormalizado = async (user) => {
@@ -41,8 +51,8 @@ export function AuthProvider({ children }: any) {
         if (token) {
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    const usuario = await usuarioNormalizado(user)
-                    
+                    const usuario = await usuarioNormalizado(user);
+
                     if (token === usuario.token) {
                         await gerenciarSessao(usuario);
                     }
@@ -59,7 +69,7 @@ export function AuthProvider({ children }: any) {
             Cookies.set("auth-minhas-tarefas", usuario.token, {
                 expires: 7,
             });
-            Cookies.set("user-minhas-tarefas", usuario.id?? 'teste', {
+            Cookies.set("user-minhas-tarefas", usuario.id ?? "teste", {
                 expires: 7,
             });
             setUsuario(usuario);
@@ -69,16 +79,18 @@ export function AuthProvider({ children }: any) {
     async function login(email, senha) {
         try {
             setCarregando(true);
-            const { user } = await signInWithEmailAndPassword(
-                auth,
-                email,
-                senha
-            );
+            setPersistence(auth, browserLocalPersistence).then(async () => {
+                const { user } = await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    senha
+                );
 
-            if (user) {
-                const usuario = await usuarioNormalizado(user)
-                await gerenciarSessao(usuario);
-            }
+                if (user) {
+                    const usuario = await usuarioNormalizado(user);
+                    await gerenciarSessao(usuario);
+                }
+            });
 
             route.push("/");
         } catch (err) {
@@ -91,21 +103,22 @@ export function AuthProvider({ children }: any) {
     async function cadastrar(email, senha, nome) {
         try {
             setCarregando(true);
-            const { user } = await createUserWithEmailAndPassword(
-                auth,
-                email,
-                senha
-            );
+            setPersistence(auth, browserLocalPersistence).then(async () => {
+                const { user } = await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    senha
+                );
 
-            if (user) {
-                
-                await updateProfile(user, {
-                    displayName: nome
-                  })
-                
-                  const usuario = await usuarioNormalizado(user)
-                await gerenciarSessao(usuario);
-            }
+                if (user) {
+                    await updateProfile(user, {
+                        displayName: nome,
+                    });
+
+                    const usuario = await usuarioNormalizado(user);
+                    await gerenciarSessao(usuario);
+                }
+            });
             route.push("/");
         } catch (err) {
             throw new Error(err.message);
@@ -121,7 +134,7 @@ export function AuthProvider({ children }: any) {
             const { user } = await signInWithPopup(auth, provider);
 
             if (user) {
-                const usuario = await usuarioNormalizado(user)
+                const usuario = await usuarioNormalizado(user);
                 await gerenciarSessao(usuario);
             }
 
@@ -143,8 +156,6 @@ export function AuthProvider({ children }: any) {
             setCarregando(false);
         }
     }
-
-    
 
     return (
         <AuthContext.Provider
