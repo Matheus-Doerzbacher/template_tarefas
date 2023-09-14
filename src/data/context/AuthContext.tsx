@@ -14,28 +14,27 @@ interface AuthContextProps {
     loginGoogle?: () => Promise<void>;
     logOut?: () => Promise<void>;
 }
-
 const AuthContext = createContext<AuthContextProps>({});
-
-const usuarioNormalizado = async (user) => {
-    if (user) {
-        const token = await user.getIdToken();
-        return {
-            id: user.uid,
-            nome: user.displayName,
-            email: user.email,
-            token,
-            provedor: user.providerData[0].providerId,
-            imagemUrl: user.photoURL,
-        };
-    }
-};
 
 export function AuthProvider({ children }: any) {
     const [carregando, setCarregando] = useState(true);
     const [usuario, setUsuario] = useState<Usuario>();
-
+    
     const route = useRouter();
+
+    const usuarioNormalizado = async (user) => {
+        if (user) {
+            const token = await user.getIdToken();
+            return {
+                id: user.uid,
+                nome: user.displayName,
+                email: user.email,
+                token,
+                provedor: user.providerData[0].providerId,
+                imagemUrl: user.photoURL,
+            };
+        }
+    };
 
     useEffect(() => {
         const token = Cookies.get("auth-minhas-tarefas");
